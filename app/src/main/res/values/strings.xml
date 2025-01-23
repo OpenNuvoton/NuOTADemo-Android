@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name" translatable="false">OTA Update</string>
+    <string name="crash_toast_text">Crash detected. Reported to developer.</string>
+
+    <string name="title_activity_main_wifi" translatable="false">OTA Update</string>
+
+    <string name="title_open_server">OTA Update Server is Open</string>
+    <string name="title_select_firmware">Select Firmware</string>
+    <string name="title_ota_done">OTA Process Done</string>
+    <string name="title_ota_fail">OTA Process Error</string>
+    <string name="title_client_reboot">Client Rebooting</string>
+    <string name="title_checksum_error">Checksum Error</string>
+    <string name="title_firmware_older">Server Sends Old Firmware</string>
+
+    <string name="content_ota_wait_client">Waiting for client to connect...</string>
+    <string name="content_ota_complete">Overall progress is complete</string>
+    <string name="content_ota_not_complete">OTA progress is not completed</string>
+    <string name="content_client_reboot">Client is rebooting, click OK to end OTA update</string>
+    <string name="content_checksum_error">Checksum is not match, click OK to end OTA update</string>
+    <string name="content_client_latest">Client has the latest firmware, no need to update</string>
+
+    <string name="external_storage_permission_no">Write external storage permission is denied, please enable it in setting menu</string>
+    <string name="external_storage_permission_yes">Write external storage permission is granted</string>
+
+    <string name="button_ota_start">OTA Process Started</string>
+
+    <string name="ota_wifi_state_idle">Idle State</string>
+    <string name="ota_wifi_state_connected">Client Connected</string>
+    <string name="ota_wifi_state_ecdh_pub0">Verify Server Identity Step 1</string>
+    <string name="ota_wifi_state_ecdh_pub1">Verify Server Identity Step 2</string>
+    <string name="ota_wifi_state_get_ecdh_pub0">Verify Client Identity Step 1</string>
+    <string name="ota_wifi_state_get_ecdh_pub1">Verify Client Identity Step 2</string>
+    <string name="ota_wifi_state_rand_ecdh_pub0">Send Server ECDH Key Step 1</string>
+    <string name="ota_wifi_state_rand_ecdh_pub1">Send Server ECDH Key Step 2</string>
+    <string name="ota_wifi_state_get_rand_ecdh_pub0">Receive Client ECDH Key Step 1</string>
+    <string name="ota_wifi_state_get_rand_ecdh_pub1">Receive Client ECDH Key Step 2</string>
+
+    <string name="ota_wifi_state_auth_sys">Authorize System Firmware</string>
+    <string name="ota_wifi_state_set_write_sys">Set System Firmware Parameter</string>
+    <string name="ota_wifi_state_write_sys">Updating System Firmware</string>
+    <string name="ota_wifi_state_auth_app">Authorize Application Firmware</string>
+    <string name="ota_wifi_state_set_write_app">Set Application Firmware Parameter</string>
+    <string name="ota_wifi_state_write_app">Updating Application Firmware</string>
+
+    <string name="ota_wifi_state_disconnect">Disconnect</string>
+    <string name="ota_wifi_state_error">Error</string>
+
+    <string name="general_okay">OK</string>
+    <string name="general_cancel">Cancel</string>
+    <string name="title_sysfw_ver">System Firmware</string>
+    <string name="title_appfw_ver">Application Firmware</string>
+    <string name="button_select_file">Select</string>
+    <string name="button_open_server">Open OTA Update Server</string>
+    <string name="title_license" translatable="false">License</string>
+    <string name="string_progress" translatable="false">%1$s/%2$s</string>
+    <string name="string_percent" translatable="false">%1$s%%</string>
+    <string name="toast_ota_stopped">Server closed</string>
+    <string name="string_not_found" translatable="false">string not found</string>
+    <string name="file_selection_error">File selection error</string>
+    <string name="Please_check_correctly">Please check if each file is selected correctly.</string>
+    <string name="okay">ok</string>
+</resources>

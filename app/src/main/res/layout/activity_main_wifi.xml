@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nuvoton.otaoverbt.MainActivityWifi"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:keepScreenOn="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:paddingTop="25dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_sysfw_ver"
+            android:gravity="left"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/NuWhite"
+            android:textStyle="bold"
+            android:textSize="25sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/editSysFW"
+                android:textColor="@color/NuWhite"
+                android:layout_marginStart="15dp"
+                android:layout_weight="5"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="(NuBL32.bin)"
+                android:textColorHint="@color/NuGray"
+                />
+            <Button
+
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/button_select_file"
+                android:textSize="12sp"
+                android:layout_weight="2"
+                android:textColor="@color/NuWhite"
+                android:backgroundTint="@color/NuRed"
+                android:id="@+id/buttonSysFW"
+                android:background="@drawable/rounded_button"
+                android:layout_margin="10dp"
+
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_appfw_ver"
+            android:gravity="left"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/NuWhite"
+            android:textStyle="bold"
+            android:textSize="25sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/editAppFW"
+                android:layout_marginStart="15dp"
+                android:layout_weight="5"
+                android:textColor="@color/NuWhite"
+                android:inputType="none"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="(NuBL33.bin)"
+                android:textColorHint="@color/NuGray"
+                />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/button_select_file"
+                android:textSize="12sp"
+                android:textColor="@color/NuWhite"
+                android:backgroundTint="@color/NuRed"
+                android:background="@drawable/rounded_button"
+                android:layout_margin="10dp"
+                android:id="@+id/buttonAppFW"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_license"
+            android:gravity="left"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/NuWhite"
+            android:textStyle="bold"
+            android:textSize="25sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:id="@+id/editLicense"
+                android:layout_marginStart="15dp"
+                android:layout_weight="5"
+                android:textColor="@color/NuWhite"
+                android:inputType="none"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="(License.txt)"
+                android:textColorHint="@color/NuGray"
+                />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:text="@string/button_select_file"
+                android:textSize="12sp"
+                android:textColor="@color/NuWhite"
+                android:backgroundTint="@color/NuRed"
+                android:background="@drawable/rounded_button"
+                android:layout_margin="10dp"
+                android:id="@+id/buttonLicense"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_ota_start"
+        android:gravity="center"
+        android:textSize="15sp"
+        android:textColor="@color/NuWhite"
+        android:backgroundTint="@color/NuRed"
+        android:id="@+id/buttonStartOTA"
+        android:background="@drawable/rounded_button"
+        android:layout_margin="20dp"
+        />
+
+    <TextView
+        android:id="@+id/textview_server_ip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Server IP: 192.168.43.1"
+        android:layout_gravity="center"
+        android:textColor="@color/NuWhite"
+        android:visibility="visible"
+        />
+
+
+
+    <TextView
+        android:id="@+id/versionName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:layout_gravity="center"
+        android:textColor="@color/NuWhite"
+        android:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="10dp"
+        app:srcCompat="@drawable/ic_logo2" />
+
+</LinearLayout>
