@@ -28,19 +28,23 @@ android {
 
 }
 
+repositories {
+    google()
+    mavenCentral() // 確保這裡有 mavenCentral()
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.21"
     implementation group: 'com.madgag.spongycastle', name: 'core', version: '1.58.0.0'
     implementation group: 'com.madgag.spongycastle', name: 'prov', version: '1.58.0.0'
 
     implementation 'com.squareup.okhttp3:mockwebserver:3.9.0'
-    implementation 'com.snatik:storage:2.1.0'
     implementation 'com.orhanobut:logger:2.1.1'
 }

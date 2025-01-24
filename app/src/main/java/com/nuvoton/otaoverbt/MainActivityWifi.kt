@@ -22,19 +22,20 @@ import com.afollestad.materialdialogs.callbacks.onCancel
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
 import com.afollestad.materialdialogs.list.listItems
-import com.nabinbhandari.android.permissions.PermissionHandler
-import com.nabinbhandari.android.permissions.Permissions
 import com.nuvoton.otaserver.ServerCallBack
 import com.nuvoton.otaserver.setServerCallBackListener
 import com.nuvoton.otaserver.utility.LocalSetting
 import com.nuvoton.otaserver.utility.SoftAPIpaddress
-import com.snatik.storage.Storage
+import kotlinx.android.synthetic.main.activity_main_wifi.editAppFW_addres
+import kotlinx.android.synthetic.main.activity_main_wifi.editSysFW_addres
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.nio.ByteBuffer
 import java.text.DecimalFormat
 import kotlin.concurrent.thread
 
@@ -148,7 +149,7 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
     lateinit var buttonSysFW: Button
     lateinit var buttonAppFW: Button
     lateinit var buttonLicense: Button
-    lateinit var storage: Storage
+    lateinit var storage: File
     lateinit var textviewServerIp: TextView
     lateinit var versionName: TextView
 //    private var folderPath = ""
@@ -177,6 +178,8 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
         buttonLicense = findViewById(R.id.buttonLicense)
         buttonLicense.setOnClickListener(onSelect_LICENSE_File)
 
+
+
         // 检查并请求读取文件的权限
         if (checkPermission()) {
 //            startFilePicker(requestCode)
@@ -184,7 +187,7 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
 //            requestPermission()
         }
 
-        storage = Storage(applicationContext)
+        storage = File(applicationContext.filesDir, "firmware")
 
         setViews()
 //        EncryptHelper.shared.testAES256()
@@ -370,12 +373,35 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
         editApp = findViewById(R.id.editAppFW)
         editLicense = findViewById(R.id.editLicense)
 
+
         buttonStartOTA = findViewById(R.id.buttonStartOTA)
         buttonStartOTA.setOnClickListener { view -> //按鈕點擊
 
+            val sysFwInput = editSysFW_addres.text.toString()
+            val appFwInput = editAppFW_addres.text.toString()
+
+            try {
+                // 轉換 sysFw 起始地址
+                val sysFwByteArray = hexStringToByteArray(sysFwInput, 4)
+                com.nuvoton.otaserver.OTAServer.shared.sysFw_startAddres = sysFwByteArray
+
+                // 轉換 appFw 起始地址
+                val appFwByteArray = hexStringToByteArray(appFwInput, 4)
+                com.nuvoton.otaserver.OTAServer.shared.appFw_startAddres = appFwByteArray
+
+                // 顯示成功訊息
+                Toast.makeText(this, "地址已成功設置", Toast.LENGTH_SHORT).show()
+            } catch (e: IllegalArgumentException) {
+                // 顯示錯誤訊息
+                Toast.makeText(this, e.message ?: "地址設置失敗", Toast.LENGTH_SHORT).show()
+            }
+
             if(com.nuvoton.otaserver.OTAServer.shared.sysFw?.isNotEmpty() != true
                 ||com.nuvoton.otaserver.OTAServer.shared.appFw?.isNotEmpty()!= true
-                ||com.nuvoton.otaserver.OTAServer.shared.license?.isNotEmpty()!= true){
+                ||com.nuvoton.otaserver.OTAServer.shared.license?.isNotEmpty()!= true
+                ||com.nuvoton.otaserver.OTAServer.shared.sysFw_startAddres?.isNotEmpty()!= true
+                ||com.nuvoton.otaserver.OTAServer.shared.appFw_startAddres?.isNotEmpty()!= true
+            ){
 
                 updateDialog = MaterialDialog(this)
                     .title(R.string.file_selection_error)
@@ -401,7 +427,7 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
                 //這邊開啟服務
                 com.nuvoton.otaserver.OTAServer.shared.messageHandler = messageHandler
 //                com.nuvoton.otaserver.OTAServer.shared.openServer(storage)
-                this.openServer(storage)
+                this.openServer()
 
                 updateDialog = MaterialDialog(this)
                         .title(R.string.title_open_server)
@@ -460,7 +486,7 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
     private var socketAccept : Socket? = null
     private val PORT_NUM = 1111
     private val PACKET_LENGTH = 64
-    fun openServer(storage: Storage) {
+    fun openServer() {
         thread {
             try {
                 if (serverSocket != null && !serverSocket!!.isClosed) {
@@ -475,7 +501,7 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
                 thread {
                     Log.i("serverSocket", "serverSocket is accept")
                     socketAccept = serverSocket!!.accept()
-                    com.nuvoton.otaserver.OTAServer.shared.openServer(storage)
+                    com.nuvoton.otaserver.OTAServer.shared.openServer()
 //                    val clientHandler = ClientHandler(serverSocket!!.accept())
 //                    clientHandler.socketInterface = object : ClientHandler.SocketInterface {
 //                        override fun closeSocket() {
@@ -520,5 +546,44 @@ class MainActivityWifi : AppCompatActivity(), ServerCallBack {
         return buffer
     }
 
+
+    /**
+     * 驗證並將 16 進制字串轉換為 ByteArray。
+     * @param input 使用者輸入的 16 進制字串
+     * @param length ByteArray 的目標長度（預設為 4 字節）
+     * @return ByteArray 轉換後的值
+     * @throws IllegalArgumentException 當輸入無效時拋出例外
+     */
+    fun hexStringToByteArray(input: String, length: Int = 4): ByteArray {
+        // 移除空白並檢查格式
+        val trimmedInput = input.trim()
+        if (!trimmedInput.matches(Regex("^[0-9A-Fa-f]{1,16}$"))) {
+            throw IllegalArgumentException("輸入無效，請輸入有效的 16 進制字串")
+        }
+
+        // 檢查長度是否正確，並確保字串長度為偶數
+        if (trimmedInput.length % 2 != 0) {
+            throw IllegalArgumentException("16 進制字串長度必須是偶數")
+        }
+
+        // 將 16 進制字串轉換為 ByteArray
+        val byteArray = ByteArray(trimmedInput.length / 2)
+        for (i in byteArray.indices) {
+            val byteString = trimmedInput.substring(i * 2, i * 2 + 2)
+            byteArray[i] = byteString.toInt(16).toByte()
+        }
+
+        // 反轉字節數組
+        byteArray.reverse()
+
+        // 如果要求的長度大於實際轉換的字節數，則進行補充
+        if (byteArray.size < length) {
+            val paddedArray = ByteArray(length)
+            System.arraycopy(byteArray, 0, paddedArray, length - byteArray.size, byteArray.size)
+            return paddedArray
+        }
+
+        return byteArray
+    }
 
 }

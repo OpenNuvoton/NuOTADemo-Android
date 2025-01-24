@@ -31,33 +31,47 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
+                android:id="@+id/editSysFW"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:id="@+id/editSysFW"
-                android:textColor="@color/NuWhite"
                 android:layout_marginStart="15dp"
                 android:layout_weight="5"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:hint="(NuBL32.bin)"
-                android:textColorHint="@color/NuGray"
-                />
+                android:textColor="@color/NuWhite"
+                android:textColorHint="@color/NuGray" />
+
             <Button
 
+                android:id="@+id/buttonSysFW"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="@string/button_select_file"
-                android:textSize="12sp"
-                android:layout_weight="2"
-                android:textColor="@color/NuWhite"
-                android:backgroundTint="@color/NuRed"
-                android:id="@+id/buttonSysFW"
-                android:background="@drawable/rounded_button"
                 android:layout_margin="10dp"
+                android:layout_weight="2"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/NuRed"
+                android:text="@string/button_select_file"
+                android:textColor="@color/NuWhite"
+                android:textSize="12sp"
 
                 />
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/editSysFW_addres"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:hint="Addres:00000000"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textColor="@color/NuWhite"
+            android:textColorHint="@color/NuGray" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -106,6 +120,18 @@
                 android:layout_margin="10dp"
                 android:id="@+id/buttonAppFW"/>
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/editAppFW_addres"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:hint="Addres:00000000"
+            android:textColor="@color/NuWhite"
+            android:textColorHint="@color/NuGray"
+            android:singleLine="true"
+            android:inputType="textVisiblePassword"
+            android:maxLines="1"/>
     </LinearLayout>
 
     <LinearLayout

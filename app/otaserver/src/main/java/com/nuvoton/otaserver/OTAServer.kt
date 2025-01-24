@@ -10,7 +10,6 @@ import com.nuvoton.otaserver.utility.LoggerInstance
 import com.nuvoton.otaserver.utility.NuvotonLogger
 import com.nuvoton.otaserver.utility.OTACommand
 import com.nuvoton.otaserver.utility.OTAStatusCode
-import com.snatik.storage.Storage
 import org.spongycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey
 import org.spongycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
 import org.spongycastle.jce.interfaces.ECKey
@@ -74,6 +73,8 @@ class OTAServer private constructor() {
     var sysFw: ByteArray? = null
     var appFw: ByteArray? = null
     var license: String? = null
+    var sysFw_startAddres: ByteArray? = null
+    var appFw_startAddres: ByteArray? = null
     var messageHandler: Handler? = null
 
     fun closeServer() {
@@ -81,50 +82,19 @@ class OTAServer private constructor() {
 //            serverSocket?.close()
     }
 
-//    //建立連線
-//    fun openServer(storage: Storage) {
-//        thread {
-//            try {
-//                if (serverSocket != null && !serverSocket!!.isClosed) {
-//                    serverSocket?.close()
-//                    serverSocket = null
-//                }
-//                serverSocket = ServerSocket()
-//                serverSocket?.reuseAddress = true
-//                serverSocket?.bind(InetSocketAddress(PORT_NUM))
-//                thread {
-//                    val clientHandler = ClientHandler(serverSocket!!.accept())
-//                    clientHandler.socketInterface = object : ClientHandler.SocketInterface {
-//                        override fun closeSocket() {
-//                            serverSocket?.close()
-//                            isUpdating = false
-//                        }
-//                    }
-//                    clientHandler.mStorage = storage
-//                    clientHandler.messageHandler = messageHandler
-//                    clientHandler.fwPathSys = sysFw
-//                    clientHandler.fwPathApp = appFw
-//                    clientHandler.ecdhSessionKeyPath = license ?: Environment.getExternalStorageDirectory().path + "/Download/license.txt"
-//                    clientHandler.run() //建立連線後就ＲＵＮ
-//                }
-//            }catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//        }
-//    }
-
     //建立連線 無Socket版本
-    fun openServer(storage: Storage) {
+    fun openServer() {
         thread {
             try {
 
                 thread {
                     val clientHandler = ClientHandler()
-                    clientHandler.mStorage = storage
                     clientHandler.messageHandler = messageHandler
                     clientHandler.fwPathSys = sysFw
                     clientHandler.fwPathApp = appFw
                     clientHandler.ecdhSessionKeyPath = license /*?: Environment.getExternalStorageDirectory().path + "/Download/license.txt"*/
+                    clientHandler.sysFw_startAddres = sysFw_startAddres
+                    clientHandler.appFw_startAddres = appFw_startAddres
                     clientHandler.run()
 
                     Log.i("serverSocket","serverSocket clientHandler is run")
@@ -136,6 +106,7 @@ class OTAServer private constructor() {
     }
 
     class ClientHandler(/*client: Socket*/) {
+
         private val DEBUG = true
         private val TAG = "ClientHandler"
         private val PACKET_LENGTH = 64
@@ -153,6 +124,7 @@ class OTAServer private constructor() {
         private var clientRandomPub1: ByteArray? = null
         private var fwByteArraySys: ByteArray? = null
         private var fwByteArrayApp: ByteArray? = null
+
         private var license0String = ""
         private var license1String = ""
         private val fwAddrOffset = 0x48
@@ -160,9 +132,10 @@ class OTAServer private constructor() {
         private val fwBL3xSize = 64
         private var secretKey: ByteArray? = null
         private var buffer = ByteArray(PACKET_LENGTH)
-        var mStorage: Storage? = null
         var fwPathSys: ByteArray? = null
         var fwPathApp: ByteArray? = null
+        var appFw_startAddres: ByteArray? = null
+        var sysFw_startAddres: ByteArray? = null
         var ecdhSessionKeyPath: String? = null
 //        var socketInterface: SocketInterface? = null //暫時關閉
         var messageHandler: Handler? = null
@@ -657,9 +630,11 @@ class OTAServer private constructor() {
                         }
                         OTAWifiState.Req_Set_Mass_Write_Sys -> {
                             val req = com.nuvoton.otaserver.OTAField(OTACommand.CMD_SET_MASS_WRITE)
-                            val startAddress = com.nuvoton.otaserver.UInt32(fwByteArraySys!!.copyOfRange(fwAddrOffset, fwAddrOffset + 4))
+                            val startAddress =  com.nuvoton.otaserver.UInt32(sysFw_startAddres!! )
+//                            com.nuvoton.otaserver.UInt32(fwByteArraySys!!.copyOfRange(fwAddrOffset, fwAddrOffset + 4))
 //                            val startAddress = UInt32(0x140000)
-                            startAddress.calculate(com.nuvoton.otaserver.Arithmetic.Sub, fwMetadataSize)
+//                            startAddress.calculate(com.nuvoton.otaserver.Arithmetic.Sub, fwMetadataSize) 2025/01/24 KLC要求 改成使用者輸入 nuStartAddres
+
                             val totalDataLength = com.nuvoton.otaserver.UInt32(fwByteArraySys!!.size.toLong())
                             var index = 0
                             startAddress.getUInt8List().forEach { u8 -> req.cipherData!![index++] = u8 }
@@ -790,9 +765,10 @@ class OTAServer private constructor() {
                         }
                         OTAWifiState.Req_Set_Mass_Write_App -> {
                             val req = com.nuvoton.otaserver.OTAField(OTACommand.CMD_SET_MASS_WRITE)
-                            val startAddress = com.nuvoton.otaserver.UInt32(fwByteArrayApp!!.copyOfRange(fwAddrOffset, fwAddrOffset + 4))
+                            val startAddress = com.nuvoton.otaserver.UInt32(appFw_startAddres!!)
+//                                com.nuvoton.otaserver.UInt32(fwByteArrayApp!!.copyOfRange(fwAddrOffset, fwAddrOffset + 4))
 //                            val startAddress = UInt32(0x1A0000)
-                            startAddress.calculate(com.nuvoton.otaserver.Arithmetic.Sub, fwMetadataSize)
+//                            startAddress.calculate(com.nuvoton.otaserver.Arithmetic.Sub, fwMetadataSize) //2025/01/24 KLC要求
                             val totalDataLength = com.nuvoton.otaserver.UInt32(fwByteArrayApp!!.size.toLong())
                             var index = 0
                             startAddress.getUInt8List().forEach { u8 -> req.cipherData!![index++] = u8 }
